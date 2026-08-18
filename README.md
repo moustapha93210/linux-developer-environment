@@ -38,11 +38,9 @@ Adresse Host-only :
 
 Cette interface permet notamment d'accéder à la VM depuis la machine hôte en SSH, HTTP ou PostgreSQL.
 
-La configuration Netplan utilisée est disponible dans :
+La configuration Netplan utilisée est disponible ici :
 
-```text
-configs/netplan/50-cloud-init.yaml
-```
+[Voir la configuration Netplan](configs/netplan/50-cloud-init.yaml)
 
 ## SSH
 
@@ -156,9 +154,7 @@ Les identifiants permettant de se connecter à l'administration sont conservés 
 
 Une version sans identifiants réels est disponible dans le dépôt :
 
-```text
-docs/app-web.txt
-```
+[Voir les informations d'accès Strapi](docs/app-web.txt)
 
 ### API des articles
 
@@ -194,11 +190,9 @@ Machine hôte
    Strapi
 ```
 
-La configuration Nginx utilisée est disponible dans :
+La configuration Nginx utilisée est disponible ici :
 
-```text
-configs/nginx/blog-strapi.conf
-```
+[Voir la configuration Nginx](configs/nginx/blog-strapi.conf)
 
 ### Erreur 502 Bad Gateway
 
@@ -216,7 +210,6 @@ Il faut alors se connecter à la VM et redémarrer Strapi :
 cd /home/modo/blog-strapi
 npm run develop
 ```
-
 
 ## PostgreSQL
 
@@ -241,11 +234,9 @@ event_participants
 
 Les relations entre les tables permettent d'associer des utilisateurs à des événements.
 
-Le schéma SQL complet est disponible dans :
+Le schéma SQL complet est disponible ici :
 
-```text
-database/schema.sql
-```
+[Voir le schéma PostgreSQL](database/schema.sql)
 
 ## Sauvegarde PostgreSQL
 
@@ -253,9 +244,7 @@ Un script Bash réalise automatiquement une sauvegarde de la base PostgreSQL.
 
 Script :
 
-```text
-scripts/backup.sh
-```
+[Voir le script de sauvegarde PostgreSQL](scripts/backup.sh)
 
 Les sauvegardes sont stockées dans :
 
@@ -269,11 +258,9 @@ Une tâche cron exécutée avec l'utilisateur `postgres` lance le backup tous le
 4 2 */2 * * /opt/backup/postgresql/backup.sh >> /opt/backup/postgresql/pg_backup.log 2>&1
 ```
 
-La configuration cron est disponible dans :
+La configuration cron est disponible ici :
 
-```text
-cron/postgres-crontab.txt
-```
+[Voir le crontab PostgreSQL](cron/postgres-crontab.txt)
 
 ## SFTP
 
@@ -291,23 +278,19 @@ Le compte est cloisonné dans le dossier :
 
 Le dossier utilisé pour les transferts de fichiers est accessible uniquement dans cet environnement cloisonné.
 
-Une version sans mot de passe des informations de connexion est disponible dans :
+Une version sans mot de passe des informations de connexion est disponible ici :
 
-```text
-docs/sftp-identifiers.txt
-```
+[Voir les informations SFTP](docs/sftp-identifiers.txt)
 
 ## Pare-feu iptables
 
 Le pare-feu de la machine est configuré avec **iptables**.
 
-Le script :
+Le script est disponible ici :
 
-```text
-scripts/firewall-script.sh
-```
+[Voir le script du pare-feu iptables](scripts/firewall-script.sh)
 
-permet notamment de :
+Il permet notamment de :
 
 * supprimer les anciennes règles ;
 * bloquer les connexions entrantes par défaut ;
@@ -321,13 +304,11 @@ Les règles sont commentées en anglais afin d'expliquer leur rôle.
 
 ## Script des jours fériés
 
-Le script :
+Le script est disponible ici :
 
-```text
-scripts/jour-ferie.sh
-```
+[Voir le script des jours fériés](scripts/jour-ferie.sh)
 
-utilise l'API officielle du gouvernement français afin de déterminer le prochain jour férié en France métropolitaine.
+Il utilise l'API officielle du gouvernement français afin de déterminer le prochain jour férié en France métropolitaine.
 
 Le script :
 
@@ -341,11 +322,9 @@ Le script :
 
 La météo de Paris est récupérée grâce à l'API **OpenWeatherMap**.
 
-Le script principal est :
+Le script principal est disponible ici :
 
-```text
-scripts/weather.sh
-```
+[Voir le script météo](scripts/weather.sh)
 
 Il récupère notamment :
 
@@ -354,13 +333,11 @@ Il récupère notamment :
 * l'humidité ;
 * les conditions météorologiques.
 
-Un second script :
+Un second script met à jour le message du jour :
 
-```text
-scripts/motd.sh
-```
+[Voir le script MOTD](scripts/motd.sh)
 
-met à jour le fichier :
+Il met à jour le fichier :
 
 ```text
 /etc/motd
@@ -374,11 +351,9 @@ Une tâche cron root exécute cette mise à jour tous les jours à **06h00** :
 0 6 * * * /home/modo/motd2.sh
 ```
 
-La configuration cron correspondante est disponible dans :
+La configuration cron correspondante est disponible ici :
 
-```text
-cron/root-crontab.txt
-```
+[Voir le crontab root](cron/root-crontab.txt)
 
 ## Organisation du dépôt
 
@@ -414,6 +389,13 @@ cron/root-crontab.txt
 └── .gitignore
 ```
 
+## Documents
+
+[Voir le fichier des auteurs](docs/authors.txt)
+
+[Voir le sujet du projet](Sujet.pdf)
+
+[Voir le syllabus du projet](SyllabusDuProjet-2.pdf)
 
 ## Partie non réalisée
 
