@@ -220,11 +220,32 @@ Configuration principale :
 ```text
 Base de données : data-db
 Utilisateur : dbuser
+Mot de passe : gTU1ZwxE92Z77H83a33OZ046
 ```
 
-La base est accessible depuis l'extérieur de la machine virtuelle afin de pouvoir être administrée avec un outil comme DataGrip ou DBeaver.
+### Tester la base de données PostgreSQL
 
-Le schéma contient trois tables :
+La base PostgreSQL peut être testée directement depuis la machine virtuelle avec l'utilisateur `dbuser`.
+
+Connexion locale :
+
+```bash
+psql -h 127.0.0.1 -U dbuser -d data-db
+```
+
+Mot de passe :
+
+```text
+gTU1ZwxE92Z77H83a33OZ046
+```
+
+Une fois connecté à PostgreSQL, vérifier que les tables sont bien présentes :
+
+```sql
+\dt
+```
+
+Les tables attendues sont :
 
 ```text
 users
@@ -232,11 +253,62 @@ events
 event_participants
 ```
 
-Les relations entre les tables permettent d'associer des utilisateurs à des événements.
+Il est également possible de tester les droits de l'utilisateur `dbuser` en ajoutant temporairement un utilisateur :
 
-Le schéma SQL complet est disponible ici :
+```sql
+INSERT INTO users (first_name, last_name, email)
+VALUES ('Test', 'User', 'test.user@example.com');
+```
+
+Vérifier ensuite que la donnée est bien enregistrée :
+
+```sql
+SELECT * FROM users;
+```
+
+Puis supprimer la donnée de test :
+
+```sql
+DELETE FROM users
+WHERE email = 'test.user@example.com';
+```
+
+Pour quitter PostgreSQL :
+
+```sql
+\q
+```
+
+### Tester l'accès PostgreSQL depuis la machine hôte
+
+La base est également accessible depuis l'extérieur de la machine virtuelle.
+
+Avec DBeaver, DataGrip ou un autre client PostgreSQL, utiliser les paramètres suivants :
+
+```text
+Host     : 192.168.56.201
+Port     : 5432
+Database : data-db
+User     : dbuser
+Password : gTU1ZwxE92Z77H83a33OZ046
+```
+
+Si `psql` est installé sur la machine hôte, la connexion peut aussi être testée directement :
+
+```bash
+psql -h 192.168.56.201 -p 5432 -U dbuser -d data-db
+```
+
+Il est également possible de vérifier depuis la VM que PostgreSQL écoute bien sur le port `5432` :
+
+```bash
+sudo ss -lntp | grep 5432
+```
+
+Le schéma SQL utilisé par le projet est disponible ici :
 
 [Voir le schéma PostgreSQL](database/schema.sql)
+
 
 ## Sauvegarde PostgreSQL
 
