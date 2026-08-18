@@ -264,6 +264,58 @@ La configuration cron est disponible ici :
 
 ## SFTP
 
+### Authentification SFTP
+
+Un utilisateur Linux dédié nommé `sftpmodo` est utilisé pour les connexions SFTP.
+
+Le compte peut être créé avec :
+
+```bash
+sudo useradd -m -d /opt/sftp/ -s /usr/sbin/nologin sftpmodo
+```
+
+Le mot de passe du compte est ensuite défini avec :
+
+```bash
+sudo passwd sftpmodo
+```
+
+La configuration SSH qui se trouve dans `/etc/ssh/sshd_config` limite cet utilisateur à l'utilisation du protocole SFTP :
+
+```text
+Match User sftpmodo
+    ChrootDirectory /opt/sftp
+    ForceCommand internal-sftp
+    AllowTcpForwarding no
+    X11Forwarding no
+    PasswordAuthentication yes
+```
+
+L'utilisateur ne dispose donc pas d'un shell Linux classique et reste cloisonné dans :
+
+```text
+/opt/sftp/
+```
+
+Les fichiers peuvent être transférés dans :
+
+```text
+/opt/sftp/uploads/
+```
+
+Pour se connecter depuis la machine hôte :
+
+```bash
+sftp sftpmodo@192.168.56.201
+```
+
+Le serveur demande ensuite le mot de passe défini précédemment avec `passwd`.
+
+Les informations de connexion utilisées pour le rendu sont disponibles dans :
+
+[Voir les informations SFTP](docs/sftp-identifiers.txt)
+
+
 Un accès SFTP a été mis en place avec un utilisateur spécifique :
 
 ```text
@@ -281,6 +333,138 @@ Le dossier utilisé pour les transferts de fichiers est accessible uniquement da
 Une version sans mot de passe des informations de connexion est disponible ici :
 
 [Voir les informations SFTP](docs/sftp-identifiers.txt)
+
+### Tester le serveur SFTP
+
+Le serveur SFTP peut être testé depuis la machine hôte avec :
+
+```bash
+sftp sftpmodo@192.168.56.201
+```
+
+Après authentification, une invite SFTP apparaît :
+
+```text
+sftp>
+```
+
+Il est possible de vérifier le dossier courant avec :
+
+```text
+pwd
+```
+
+Le résultat attendu est :
+
+```text
+Remote working directory: /
+```
+
+Dans cet environnement, `/` correspond au dossier chroot configuré sur la VM :
+
+```text
+/opt/sftp/
+```
+
+Les fichiers accessibles peuvent être listés avec :
+
+```text
+ls -la
+```
+
+Le dossier utilisé pour les transferts est :
+
+```text
+uploads
+```
+
+On peut y accéder avec :
+
+```text
+cd uploads
+```
+
+### Vérifier le cloisonnement
+
+Le compte `sftpmodo` est volontairement limité à son environnement SFTP.
+
+Par exemple :
+
+```text
+cd /etc
+```
+
+doit échouer, car le véritable dossier `/etc` de la machine n'est pas accessible depuis le chroot.
+
+Cela permet de vérifier que l'utilisateur ne peut pas parcourir le reste du système.
+
+### Tester l'envoi d'un fichier
+
+Depuis le terminal Git Bash de la machine hôte, créer un fichier de test :
+
+```bash
+echo "Test SFTP Linux project" > test-sftp.txt
+```
+
+Puis se reconnecter au serveur SFTP :
+
+```bash
+sftp sftpmodo@192.168.56.201
+```
+
+Se placer dans le dossier d'upload :
+
+```text
+cd uploads
+```
+
+Puis envoyer le fichier :
+
+```text
+put test-sftp.txt
+```
+
+Vérifier sa présence avec :
+
+```text
+ls -l
+```
+
+### Tester le téléchargement d'un fichier
+
+Toujours depuis l'invite SFTP :
+
+```text
+get test-sftp.txt test-sftp-download.txt
+```
+
+Puis quitter :
+
+```text
+exit
+```
+
+Le fichier téléchargé peut ensuite être vérifié depuis Git Bash :
+
+```bash
+cat test-sftp-download.txt
+```
+
+Le contenu attendu est :
+
+```text
+Test SFTP Linux project
+```
+
+Ces tests permettent de valider :
+
+* la connexion au serveur SFTP ;
+* l'authentification de l'utilisateur `sftpmodo` ;
+* le cloisonnement du compte ;
+* l'envoi de fichiers ;
+* le téléchargement de fichiers.
+
+
 
 ## Pare-feu iptables
 
