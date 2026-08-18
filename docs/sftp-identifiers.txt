@@ -1,0 +1,3 @@
+Nom d'utilisateur SFTP : sftpmodo
+Mot de passe : <SFTP_PASSWORD>
+Le dossier (le chroot) : /opt/sftp/

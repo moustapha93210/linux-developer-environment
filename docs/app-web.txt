@@ -1,0 +1,28 @@
+Application Node.js – Projet Strapi
+
+URL d’accès externe :
+http://192.168.56.201
+
+URL Strapi admin :
+http://192.168.56.201/admin
+
+Identifiant administrateur :
+<STRAPI_ADMIN_EMAIL>
+
+Mot de passe :
+<STRAPI_ADMIN_PASSWORD>
+
+API Articles :
+GET http://192.168.56.201/api/articles
+
+Serveur HTTP :
+Nginx
+
+Configuration proxy :
+Nginx écoute sur le port 80 et redirige vers Strapi sur http://127.0.0.1:1337.
+
+Contenus créés :
+Blog contenant des articles et des utilisateurs.
+
+Statut :
+Site fonctionnel et accessible depuis le réseau local via Nginx.

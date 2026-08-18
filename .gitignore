@@ -1,0 +1,30 @@
+# Virtual machine
+*.ova
+*.vdi
+*.vbox
+
+# Sensitive files
+root.txt
+ssh-keys.txt
+MEGA-CLÉdeRÉCUPÉRATION.txt
+vm-url.txt
+lien_vers_la_vm.txt
+
+# Secrets
+.env
+*.key
+id_rsa
+id_ed25519
+
+# Database backups
+*.sql
+*.dump
+
+# Keep the database schema in Git
+!database/schema.sql
+
+# Node / Strapi
+node_modules/
+.tmp/
+.cache/
+build/
