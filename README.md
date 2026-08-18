@@ -62,44 +62,161 @@ ssh modo@192.168.56.201
 
 ## Application web Node.js avec Strapi
 
-Une application web basée sur **Node.js et Strapi** a été installée sur la machine.
+Une application web basée sur **Node.js et Strapi** a été mise en place sur la machine virtuelle.
 
-Strapi est utilisé comme CMS headless pour gérer un blog comprenant notamment :
+Strapi est utilisé comme CMS headless afin de gérer un blog contenant notamment des articles et des utilisateurs.
 
-* des articles ;
-* des utilisateurs.
+### Installation de Strapi
 
-Strapi fonctionne localement sur :
+Pour installer Strapi sur une nouvelle machine, il faut suivre le **Quick Start Guide officiel de Strapi** :
+
+https://docs.strapi.io/cms/quick-start
+
+La documentation explique notamment comment :
+
+* vérifier les prérequis Node.js et npm ;
+* créer un projet Strapi ;
+* installer les dépendances ;
+* créer le premier compte administrateur ;
+* démarrer le serveur Strapi.
+
+Dans ce projet, l'application Strapi a été créée dans le dossier :
+
+```text
+/home/modo/blog-strapi
+```
+
+### Démarrer le projet existant
+
+Une fois Strapi installé et le projet présent dans `/home/modo/blog-strapi`, se connecter à la machine virtuelle :
+
+```bash
+ssh modo@192.168.56.201
+```
+
+Puis se placer dans le dossier du projet :
+
+```bash
+cd /home/modo/blog-strapi
+```
+
+Démarrer ensuite Strapi en mode développement :
+
+```bash
+npm run develop
+```
+
+Lorsque le démarrage est terminé, le terminal doit notamment afficher :
+
+```text
+Strapi started successfully
+```
+
+Strapi écoute alors localement dans la VM sur :
 
 ```text
 http://127.0.0.1:1337
 ```
 
-L'application est exposée sur le réseau grâce à **Nginx**, utilisé comme reverse proxy.
+ou :
 
-Accès externe :
+```text
+http://localhost:1337
+```
+
+Ces adresses correspondent à la boucle locale de la **machine virtuelle**. Elles ne permettent donc pas d'accéder directement à Strapi depuis le navigateur de la machine hôte.
+
+### Accès depuis la machine hôte
+
+Nginx est utilisé comme reverse proxy.
+
+Il écoute sur le port HTTP `80` de la VM puis transmet les requêtes à Strapi sur :
+
+```text
+127.0.0.1:1337
+```
+
+L'application est accessible depuis la machine hôte à l'adresse :
 
 ```text
 http://192.168.56.201
 ```
 
-Administration Strapi :
+L'interface d'administration Strapi est accessible avec :
 
 ```text
 http://192.168.56.201/admin
 ```
 
-API des articles :
+Les identifiants permettant de se connecter à l'administration sont conservés dans le fichier de rendu présent sur la VM :
+
+```text
+/home/modo/app-web.txt
+```
+
+Une version sans identifiants réels est disponible dans le dépôt :
+
+```text
+docs/app-web.txt
+```
+
+### API des articles
+
+L'API REST permettant de récupérer les articles est accessible avec :
 
 ```text
 GET http://192.168.56.201/api/articles
 ```
 
-La configuration Nginx est disponible dans :
+Elle peut également être testée avec :
+
+```bash
+curl http://192.168.56.201/api/articles
+```
+
+### Architecture de l'accès web
+
+```text
+Machine hôte
+     |
+     | HTTP :80
+     v
+192.168.56.201
+     |
+     v
+   Nginx
+     |
+     | Reverse proxy
+     v
+127.0.0.1:1337
+     |
+     v
+   Strapi
+```
+
+La configuration Nginx utilisée est disponible dans :
 
 ```text
 configs/nginx/blog-strapi.conf
 ```
+
+### Erreur 502 Bad Gateway
+
+Si Nginx affiche :
+
+```text
+502 Bad Gateway
+```
+
+cela signifie généralement que Nginx fonctionne mais qu'il ne peut pas joindre Strapi sur le port `1337`.
+
+Il faut alors se connecter à la VM et redémarrer Strapi :
+
+```bash
+cd /home/modo/blog-strapi
+npm run develop
+```
+
 
 ## PostgreSQL
 
